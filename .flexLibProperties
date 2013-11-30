@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="com.plugins.BezierThroughPlugin"/>
+    <classEntry path="com.plugins.TransformMatrixPlugin"/>
+    <classEntry path="com.plugins.FrameForwardPlugin"/>
+    <classEntry path="com.plugins.TweenPlugin"/>
+    <classEntry path="com.data.TweenMaxVars"/>
+    <classEntry path="com.layout.AlignMode"/>
+    <classEntry path="com.plugins.VolumePlugin"/>
+    <classEntry path="com.greensock.BlitMask"/>
+    <classEntry path="com.core.SimpleTimeline"/>
+    <classEntry path="com.motionPaths.CirclePath2D"/>
+    <classEntry path="com.loading.VideoLoader"/>
+    <classEntry path="com.easing.Quart"/>
+    <classEntry path="com.plugins.DropShadowFilterPlugin"/>
+    <classEntry path="com.plugins.VisiblePlugin"/>
+    <classEntry path="com.plugins.ColorMatrixFilterPlugin"/>
+    <classEntry path="com.plugins.CacheAsBitmapPlugin"/>
+    <classEntry path="com.core.TweenCore"/>
+    <classEntry path="com.loading.core.LoaderCore"/>
+    <classEntry path="com.loading.data.VideoLoaderVars"/>
+    <classEntry path="com.loading.data.LoaderMaxVars"/>
+    <classEntry path="com.loading.data.XMLLoaderVars"/>
+    <classEntry path="com.loading.core.DisplayObjectLoader"/>
+    <classEntry path="com.loading.display.FlexContentDisplay"/>
+    <classEntry path="com.loading.data.MP3LoaderVars"/>
+    <classEntry path="com.loading.display.ContentDisplay"/>
+    <classEntry path="com.loading.data.DataLoaderVars"/>
+    <classEntry path="com.loading.data.ImageLoaderVars"/>
+    <classEntry path="com.loading.data.CSSLoaderVars"/>
+    <classEntry path="com.loading.data.SWFLoaderVars"/>
+    <classEntry path="com.loading.core.LoaderItem"/>
+    <classEntry path="naga.tool.DateOperation"/>
+    <classEntry path="naga.eff.Flash"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
