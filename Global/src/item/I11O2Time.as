@@ -50,19 +50,21 @@
 		private static function clear():void
 		{
 			SafeTime.isSafe = true;
-			O2Bar.changeO2(-10);
+			O2Bar.changeO2(-8);
+			if(O2Bar.o2 == 0)
+			{
+				EventManager.delEventFn(timer,TimerEvent.TIMER,clear);
+				O2Bar.changeO2BarNormal();
+				clearOver();
+			}
 //			I2Clear.go();
 		}
 		
-		public static function clearOver():void
+		private static function clearOver():void
 		{
-			iDoing = false;
 			SafeTime.isSafe = false;
 			PopFactory.state = 0;
-			if(timer.hasEventListener(TimerEvent.TIMER))
-			{
-				EventManager.delEventFn(timer,TimerEvent.TIMER,clear);
-			}
+			iDoing = false;
 		}
 		
 		override public function achCount() : void

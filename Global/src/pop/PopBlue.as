@@ -33,8 +33,8 @@
 		
 		private function addItemBlue():void{
 			//测试道具
-//						addItem(2);
-//						/*
+						addItem(2);
+						/*
 			var rd:int = Math.random() * 100;
 			if (rd < 45)
 			{

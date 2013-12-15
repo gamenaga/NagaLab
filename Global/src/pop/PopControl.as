@@ -86,8 +86,11 @@ package pop
 		{
 			//			trace("main 155:	囧");
 			//			Shake.add(Global.bg,500,10);
-			Sounds.play(Se_bad,0,0.2);
-			Bubble.instance.show("Miss", "PanMiss", Global.gameStage.mouseX, Global.gameStage.mouseY, 160, Css.SIZE*1.5, Css.SILVER);
+			Sounds.play(Se_bad,0,0.3);
+			if(Main.mode.game_combo >=3)
+			{
+				Bubble.instance.show("Miss", "PanMiss", Global.gameStage.mouseX, Global.gameStage.mouseY, 160, Css.SIZE*1.5, Css.SILVER);
+			}
 			Main.mode.combo_over();
 		}// end function
 		

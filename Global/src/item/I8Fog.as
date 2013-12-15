@@ -36,7 +36,7 @@
         private static function call(name:String, time:int = 0) : void
         {
 //			trace(38,iDoing);
-            Vision.instance.add(name, E8Cloud,Global.eff_floor, 0, 0, null, .45, time,1,0,true,true,true);
+            Vision.instance.add(name, E8Cloud,Global.eff_floor, 0, 0, null, .4, time,1,0,true,true,true);
         }// end function
 		
 		public static function over() : void
@@ -44,8 +44,8 @@
 			if (iDoing)
 			{
 //				trace(46,iDoing);
-				iDoing=false;
 				Vision.instance.remove("i008");
+				iDoing=false;
 			}
 		}// end function
 		

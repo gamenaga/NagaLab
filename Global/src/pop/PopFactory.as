@@ -43,7 +43,7 @@ package pop
 		/**
 		 *泡泡工厂的状态
 		 * 0 正常：数量上限正常
-		 * 1 道具状态：数量上限提升
+		 * 1 暴走状态：数量上限提升
 		 * 2 欢乐时光状态：无上限限制 
 		 */
 		public static var state:int = 0;//当前道具的状态
@@ -152,7 +152,7 @@ package pop
 			}
 			else if(state != 2)// && Global.g_floor.numChildren < popNumMaxItem * 1.5)
 			{
-				pause(1000);
+				pause(g_sp*2);
 			}
 		}// end function
 		

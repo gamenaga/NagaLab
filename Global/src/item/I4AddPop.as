@@ -109,7 +109,7 @@
 			PopFactory.pop_type = 10;
 //			if(bak_speed >= PopFactory.g_sp)
 //			{
-				PopFactory.changeSpeed(PopFactory.g_sp_max*.5,1);
+				PopFactory.changeSpeed(PopFactory.g_sp_max*.4,1);
 //			}
 		}
 		

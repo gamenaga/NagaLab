@@ -57,8 +57,8 @@
 
         public static function over() : void
         {
-			iDoing=false;
 			GameStop.run();
+			iDoing=false;
         }// end function
 		
 		override public function achCount() : void

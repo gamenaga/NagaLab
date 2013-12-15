@@ -35,7 +35,7 @@ package game
 		public static var lv2_:int;//达人等级
 		public static var tempLv:int;//当前实时等级
 		public static var score:int;
-		public static const SHOP_LV:Array=[1000];//增量
+		public static const SHOP_LV:Array=[100,200,300,400,500,500,1000];//增量
 		
 		public function LvUp()
 		{
@@ -79,6 +79,7 @@ package game
 //			}
 			
 			if(is_lvUp){
+				Global.bg.next();
 				Sounds.play(Se_lv_up);
 				if(!I11O2Time.iDoing)
 				{

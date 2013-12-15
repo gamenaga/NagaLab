@@ -32,13 +32,13 @@
 //        public static const PAN_BLUE:String = "e8f6ff";//面板蓝色
 //        public static const PAN_RED:String = "fff3f3";//面板红色
 		
-		[Embed(source="../../../../../Pop/Pop_O2/2/PopO2en/res/ui/scoreFont.png")]
+		[Embed(source="../../../res/font/scoreFont.png")]
 		public static const SCORE_FONT:Class;
-		[Embed(source="../../../../../Pop/Pop_O2/2/PopO2en/res/ui/scoreFont.xml",mimeType="application/octet-stream")]
+		[Embed(source="../../../res/font/scoreFont.xml",mimeType="application/octet-stream")]
 		public static const SCORE_FONT_FNT:Class;
-		[Embed(source="../../../../../Pop/Pop_O2/2/PopO2en/res/ui/hiScoreFont.png")]
+		[Embed(source="../../../res/font/hiScoreFont.png")]
 		public static const HI_SCORE_FONT:Class;
-		[Embed(source="../../../../../Pop/Pop_O2/2/PopO2en/res/ui/hiScoreFont.xml",mimeType="application/octet-stream")]
+		[Embed(source="../../../res/font/hiScoreFont.xml",mimeType="application/octet-stream")]
 		public static const HI_SCORE_FONT_FNT:Class;
 		
 		public static function init(size:int,font:String="黑体",color_bubble_words:String = "a84200",color_pan_words:String = "a84200",color_title:String = "eb6100",color_important:String = "005286"):void

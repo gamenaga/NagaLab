@@ -22,8 +22,17 @@
 		 *游戏初始化的场景
 		 * 
 		 */		
-		public function initGame() : void
+		public function initGame(mode:String) : void
 		{
+		}
+		
+		public function next():void
+		{
+		}
+		
+		public function prev():void
+		{
+			
 		}
 	}
 }

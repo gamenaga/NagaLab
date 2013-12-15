@@ -63,7 +63,7 @@
 		
 		protected override function popBombEff():void
 		{
-			Vision.instance.add("bomb" + num, E2BombBlack,Global.eff_floor, p.x, p.y, null, 1, 300, scale,0,false,false,true);
+			Vision.instance.add("bomb" + num, E2BombBlack,Global.eff_floor, p.x, p.y, null, 1, 500, scale,0,false,false,true);
 		}
 		
 		override protected function achCount() : void

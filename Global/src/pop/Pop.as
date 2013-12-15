@@ -57,6 +57,9 @@
         protected const POP_WHITE:int = 10;//白色泡泡分值
         protected const POP_BLUE:int = 50;
         protected const POP_RED:int = -100;
+		private var state:int;// 泡泡的状态
+		private const STATE_INIT:int = 0;
+		private const STATE_MOVE:int = 1;
         public var items:Item = null;//有无道具
         public var bomb_chk:int = 1;
         public var missed:Boolean = false;
@@ -107,6 +110,7 @@
 				//			scale=1;
 				//			items = null;//有无道具
 				bomb_chk = 1;
+				state = STATE_INIT;
 				missed = false;
 				is_bomb = false;
 				is_out = false;
@@ -163,6 +167,7 @@
 				else
 				{
 //					p.addEventListener(Event.ENTER_FRAME, this["come_in_" + path]);
+					seckilling();
 					EventManager.AddEventFn(p,Event.ENTER_FRAME, this["come_in_" + path]);
 				}
 			}
@@ -185,7 +190,6 @@
 			//检测各模式的成就
 			Main.mode.chkAch();
 			/* 移出场景 */
-			whenDel();
 			if(p!=null)
 			{
 				if(p.hasEventListener(Event.ENTER_FRAME))
@@ -283,6 +287,18 @@
 			EventManager.AddEventFn(p,Event.ENTER_FRAME, this["come_in_" + path]);
 		}
 		
+		private function seckilling():void
+		{
+			warnTimer.reset();
+			warnTimer.delay=500;
+			EventManager.AddEventFn(warnTimer,TimerEvent.TIMER_COMPLETE,seckillOver);
+			warnTimer.start();
+		}
+		private function seckillOver():void
+		{
+			EventManager.delEventFn(warnTimer,TimerEvent.TIMER_COMPLETE,seckillOver);
+			state = STATE_MOVE;
+		}
 
         public function addItem(id:int, sca:Number = 1) : void
         {
@@ -359,6 +375,8 @@
 		{
 //			p.removeEventListener(Event.ENTER_FRAME, this["move_" + path]);
 			EventManager.delAllEvent(p);
+			is_bomb = true;
+			whenDel();
 			is_out = true;
 			miss();
 //			if (items)
@@ -430,76 +448,98 @@
 		
         public function pop_bomb() : void
         {
-			is_bomb = true;
-			if(p!=null)
+			if( !is_bomb )
 			{
-				EventManager.delAllEvent(p);
-//				trace("pop 373:	"+p.hasEventListener(Event.ENTER_FRAME));
-//				EventManager.delEventFn(p,Event.ENTER_FRAME,pudding);
-//				if(p.hasEventListener(Event.ENTER_FRAME))
-//				{
-//					EventManager.delEventFn(p,Event.ENTER_FRAME, this["move_" + path]);
-//				}
-				//			Safe_t.safe();
-				achCount();
-				if(score>0 || !missed)
+				is_bomb = true;
+				whenDel();
+				if(p!=null)
 				{
-					if(Main.mode.game_type == Global.TYPE_TALENT.name)
+					EventManager.delAllEvent(p);
+					//				trace("pop 373:	"+p.hasEventListener(Event.ENTER_FRAME));
+					//				EventManager.delEventFn(p,Event.ENTER_FRAME,pudding);
+					//				if(p.hasEventListener(Event.ENTER_FRAME))
+					//				{
+					//					EventManager.delEventFn(p,Event.ENTER_FRAME, this["move_" + path]);
+					//				}
+					//			Safe_t.safe();
+					achCount();
+					if(score>0 || !missed)
 					{
-						score *= 2;
+						var score2:int;
+						score2 = int(score + Math.sqrt(Main.mode.game_combo));
+						
+						if(state == STATE_INIT)
+						{
+							score2 *= 1.5;
+						}
+						if(Main.mode.game_type == Global.TYPE_TALENT.name)
+						{
+							score2 *= 2;
+						}
+						Global.m_p.setValueByFun("score",changeScore);
+						//					trace("pop 391: ",score,Global.m_p.getValue("score"))
+						function changeScore(value:*):int
+						{
+							if(value+score2>0){
+								value = value + score2;
+								if(DataObj4399.serviceHold){
+									DataObj4399.serviceHold.changeScore(value); //socre为当前总分数变量，类型为int    
+								}
+							}
+							else{
+								value=0;
+							}
+							return value
+						}
 					}
-					var score2:int;
-					score2 = int(score + Math.sqrt(Main.mode.game_combo));
-					Global.m_p.setValueByFun("score",changeScore);
-//					trace("pop 391: ",score,Global.m_p.getValue("score"))
-					function changeScore(value:*):int
+					//				MttScore.score = Global.m_p.getValue("score");
+					//			Main.o2 = Main.o2 + Math.sqrt(Main.game_combo * 2);
+					// 连击计算
+					if(score2>0)
 					{
-						if(value+score2>0){
-							value = value + score2;
-							if(DataObj4399.serviceHold){
-								DataObj4399.serviceHold.changeScore(value); //socre为当前总分数变量，类型为int    
+						if(PopFactory.state != 2)
+						{
+							if(state == STATE_INIT)
+							{
+								Main.mode.game_seckill ++;
+								Main.mode.game_seckill_combo ++;
+							}
+							else
+							{
+								Main.mode.game_seckill_combo =0;
+								Main.mode.game_combo ++;
+								if(Main.mode.game_combo > Main.mode.hi_combo)
+								{
+									Main.mode.hi_combo = Main.mode.game_combo;
+								}
 							}
 						}
-						else{
-							value=0;
+						Main.mode.chk_score(p.x, p.y, score2);
+					}
+					popBombEff();
+					//				trace("pop 399:	",items,missed);
+					if (items)
+					{
+						p.mouseEnabled = false;
+						p.pic2.visible=false;
+						if(!missed)
+						{
+							items.achCount();
+							items.item_do();
 						}
-						return value
+						else
+						{
+							ObjPool.instance.returnObj(this);
+						}
 					}
-				}
-//				MttScore.score = Global.m_p.getValue("score");
-				//			Main.o2 = Main.o2 + Math.sqrt(Main.game_combo * 2);
-				if(score2>0)
-				{
-					Main.mode.game_combo ++;
-					if(Main.mode.game_combo > Main.mode.hi_combo)
-					{
-						Main.mode.hi_combo = Main.mode.game_combo;
-					}
-					Main.mode.chk_score(p.x, p.y, score2);
-				}
-				popBombEff();
-//				trace("pop 399:	",items,missed);
-				if (items)
-				{
-					p.mouseEnabled = false;
-					p.pic2.visible=false;
-					if(!missed)
-					{
-						items.achCount();
-						items.item_do();
-					}
-					else
-					{
+					else{
 						ObjPool.instance.returnObj(this);
 					}
 				}
-				else{
+				else
+				{
 					ObjPool.instance.returnObj(this);
 				}
-			}
-			else
-			{
-				ObjPool.instance.returnObj(this);
 			}
         }// end function
 
@@ -663,6 +703,7 @@
 		public function popClear():void
 		{
 			Music.play();
+			state = STATE_MOVE;
 			missed = true;
 			pop_bomb();
 		}

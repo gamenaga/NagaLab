@@ -55,13 +55,15 @@
 		protected var delay:int;
 		public var bomb_time:int;
 		public var bomb_gap:int;
-		public var game_combo:int;
+		public var game_combo:int;//连击数
 		public var game_combo_level:int;
 		public var temp_combo_lv:int;
 		public var hi_combo:int;
 		public var mu_combo:int;
+		public var game_seckill:int;//秒杀数
+		public var game_seckill_combo:int;//秒杀连击数
 		
-		public function Mode(type:Object = null, show_score:Boolean = false)
+		public function Mode(type:Object, show_score:Boolean = false)
 		{
 			
 //						trace("mode 61:	type "+type);
@@ -75,7 +77,6 @@
 		 */		
 		public function init(type:Object):void
 		{
-			Global.bg.initGame();
 			game_type = type.name;//二级类型  如 连击模式"加强版"
 			Global.g_move_sp_init=type.move_sp;
 			Global.g_move_sp_max=type.move_sp_max;
@@ -122,6 +123,7 @@
 		
 		public function gameReady() : void
 		{
+			Global.bg.initGame(game_type);
 			PopFactory.gameInit();
 			//泡泡弹力系数初始化
 			Global.spring = .1;//加速度
@@ -157,6 +159,8 @@
 			temp_combo_lv = 0;
 			hi_combo = 0;
 			mu_combo = 0;
+			game_seckill = 0;
+			game_seckill_combo = 0;
 			//			UI.btnItem1.visible=false;//隐藏道具栏
 			if (g_mode != null)
 			{
@@ -244,7 +248,8 @@
 			//到达一定分数，升级
 //			trace("mode  209 :10ge "+Global.m_p.getValue("score")+"  "+Shop.lv+" "+Shop.score);
 			if(Global.m_p.getValue("score") - LvUp.score >= 0){
-				LvUp.score+=LvUp.SHOP_LV[Math.min(LvUp.lv_,LvUp.SHOP_LV.length-1)];
+//				trace("mod 251:",LvUp.score);
+				LvUp.score += LvUp.SHOP_LV[Math.min(LvUp.tempLv +1, LvUp.SHOP_LV.length-1)];
 				LvUp.lvChange(1,1,true);
 			}
 			modeChkAch();
@@ -295,6 +300,8 @@
 			game_combo = 0;
 			//			I1_sp_down.change_speed(Global.g_sp + (Global.g_sp_max - Global.g_sp) * 0.1);
 			chk_score();
+			
+			Global.bg.prev();
 			//			LvUp.lvChange(0,-1);
 		}// end function
 		
@@ -388,7 +395,7 @@
 				//					临时等级更新，作为等级改变的判断
 				temp_combo_lv = game_combo_level;
 			}
-			else
+			else if(PopFactory.state != 2)
 			{//等级未发生变化时。。。
 				show_sc(score);
 			}
@@ -399,9 +406,15 @@
 			//			}
 			function show_sc(score:int):void{
 				//				if (game_combo != 0 && game_combo % 10 == 0)
-				if (game_combo >2)
+				var size:int;
+				size = (game_combo_level + 6) * Css.SIZE*.1 + Css.SIZE * .7;
+				if( game_seckill_combo >=1)
+				{
+					Bubble.instance.show("<font size=\'" + size + "\' color=\'#" + Css.ORAN_S + "\'>" + game_combo + "</font><br><b>SecKill</b>", Bubble.TYPE_SCORE, pos_x, pos_y, 180,size*.8);
+					}
+				else if (game_combo >2)
 				{//连击数提示
-					var size:int=(game_combo_level + 6) * Css.SIZE*.1 + Css.SIZE * .7;
+//					size = (game_combo_level + 6) * Css.SIZE*.1 + Css.SIZE * .7;
 					Bubble.instance.show("<font size=\'" + size + "\' color=\'#" + Css.ORAN_S + "\'>" + game_combo + "</font><br><b>Combo</b>", Bubble.TYPE_SCORE, pos_x, pos_y, 180,size*.6);
 					//记录单局最高连击数
 					if(Main.mode.ach.g_combo<game_combo)
@@ -418,10 +431,12 @@
 			
 			//			检测分数更换背景 每5000换1次
 			//						trace("main 306:	"+Global.m_p.getValue("score")+"	"+Global.m_p.getValue("score")/100+"	"+Main.mode.ach.bg_lv);
-			if (Global.m_p.getValue("score")/500 > Main.mode.ach.bg_lv+1)
+			if (Global.m_p.getValue("score")/1000 > Main.mode.ach.bg_lv+1)
 			{//数量大于成就记录数量
-				//				trace("main 382:	Main.mode.ach.bg_lv:"+Main.mode.ach.bg_lv);
+//								trace("main 425:	Main.mode.ach.bg_lv:"+Main.mode.ach.bg_lv);
 				Main.mode.ach.bg_lv ++;
+				
+				
 			}
 			
 			//			泡泡数量成就
@@ -459,9 +474,9 @@
 			game_state = STATE_OVER;
 			if(DataObj.data[2] >= game_silver)
 			{
-			Dialog.add("糟糕！\\1\\010耗尽……" +
-				"<br><br>想使用\\1\\011<font size=\'-"+Css.SIZE*.1+"\' color=\'#" + Css.SILVER + "\'>" + game_silver + "</font>回复\\1\\010吗？" +
-				"<br><br>（\\1\\011余额<font size=\'-"+Css.SIZE*.1+"\' color=\'#" + Css.SILVER + "\'>" + DataObj.data[2] + "</font>）"
+			Dialog.add("糟糕！红心\\1\\010耗尽……" +
+				"<br><br>想使用 银币\\1\\011<font size=\'-"+Css.SIZE*.1+"\' color=\'#" + Css.SILVER + "\'>" + game_silver + "</font>恢复 红心\\1\\010吗？" +
+				"<br><br>（银币\\1\\011余额<font size=\'-"+Css.SIZE*.1+"\' color=\'#" + Css.SILVER + "\'>" + DataObj.data[2] + "</font>）"
 				,null,0,null,null,0,0,0,0,0,["是",gameRelive,"否",gameOver]);
 			}
 			else

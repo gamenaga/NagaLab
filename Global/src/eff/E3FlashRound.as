@@ -54,6 +54,7 @@ package eff
 			}
 			if(Global.eff_floor.contains(this))
 			{
+				BC.stop();
 				Global.eff_floor.removeChild(this);
 			}
 			_destroyed = true;

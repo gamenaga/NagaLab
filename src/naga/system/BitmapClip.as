@@ -119,8 +119,14 @@ package naga.system
 		private function setFrame(frame:int):void
 		{
 			index = frame - 1;
-			if(index < 0)index = 0;
-			if(index > bmdList.length - 1)index = bmdList.length - 1;
+			if(index < 0)
+			{
+				index = 0;
+			}
+			else if(index > bmdList.length - 1)
+			{
+				index = bmdList.length - 1;
+			}
 		}
 		/**
 		 * 跳到目标帧上并停止
@@ -172,6 +178,7 @@ package naga.system
 		private function draw():void
 		{
 			var cvo:ClipVo = bmdList[index];
+//			trace("bc 181:",index);
 			if(cvo)
 			{
 				bitmapData = cvo.data;

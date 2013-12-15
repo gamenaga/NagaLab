@@ -1,6 +1,6 @@
 package naga.tool
 {
-	import com.greensock.TweenLite;
+//	import com.greensock.TweenLite;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -14,7 +14,7 @@ package naga.tool
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	
-	import com.greensock.TweenLite;
+//	import com.greensock.TweenLite;
 	
 	/**
 	 *	仿手机手势滑动图集

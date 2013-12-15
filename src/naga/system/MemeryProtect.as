@@ -15,11 +15,11 @@
 		public static var instance:MemeryProtect;
 		private var varObj:Object;
 		
-		public function PreventCF():void{
-			if(PreventCF.instance != null)
+		public function MemeryProtect():void{
+			if(MemeryProtect.instance != null)
 				throw new Error("只能实例一次！");
 			else
-			    PreventCF.instance = this;
+				MemeryProtect.instance = this;
 		}
 		
 		public static function getInstance():MemeryProtect{

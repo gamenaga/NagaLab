@@ -50,6 +50,8 @@ package pop
 //			}
 			pic2.addChild(popBC);
 			addChild(pic2);
+//			pic.x=50;
+//			pic.y=50;
 			addChild(pic);
 			pic2.mask=pic;
 			

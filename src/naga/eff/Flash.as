@@ -98,8 +98,9 @@ package naga.eff
 				}
 			}
 		}
-		public function goBack():void
+		public function goBack(mouseEnable:Boolean = false):void
 		{
+			pan.mouseEnabled = mouseEnable;
 			EventManager.AddEventFn(pan,Event.ENTER_FRAME, prev);
 		}
 		

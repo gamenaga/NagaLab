@@ -3,11 +3,6 @@
 	
 	import audio.Music;
 	
-	import eff.E6Flash;
-	
-	import naga.eff.Vision;
-	import naga.global.Global;
-	
 	import ui.O2Bar;
 
     public class PopWhite extends Pop
@@ -44,7 +39,7 @@
 		
 		private function addItemWhite():void{
 			//测试道具
-//			addItem(8);
+//			addItem(2);
 //			/*
 			var rd:Number= Math.random();
 			if (PopFactory.popID > 300)

@@ -84,10 +84,10 @@
 		
 		private function i6_over() : void
 		{
-			iDoing = false;
 			icon.removeChild(bigSmall);
 			PopFactory.sca_eff = 1;
 			item_over();
+			iDoing = false;
 		}// end function
 		
 		override public function achCount() : void

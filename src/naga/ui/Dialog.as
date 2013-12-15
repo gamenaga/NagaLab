@@ -260,7 +260,7 @@
 					end_function[temp].x = alert_text.x + alert_text.width * (temp * 0.5 + 1) / (bt_num + 1) - end_function[temp].width * 0.5;
 					end_function[temp].y = alert_text.y + alert_text.pan.l_b.y - end_function[temp].pan.l_b.y * 2;// - a_h;
 //					trace("dialog 254:	",end_function[temp].y,alert_text.y,alert_text.height,alert_text.pan.l_b.y,end_function[temp].height,end_function[temp].pan.l_b.y);
-					InOut.fadeIn(end_function[temp], 0.2);
+					InOut.fadeIn(end_function[temp], 0.2, 0);
 					Global.tp_floor.addChild(end_function[temp]);
 //					end_function[temp].addEventListener(MouseEvent.MOUSE_DOWN, hide);
 					EventManager.AddEventFn(end_function[temp],MouseEvent.MOUSE_DOWN, hide ,null,true);
