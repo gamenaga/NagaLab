@@ -52,6 +52,7 @@ package ui
 		}
 		public static function initHP(point:int):void{
 			
+//			trace("hp 55:",point);
 			Main.mode.hp_=point;
 			for(var i:int=0;i<5;i++){
 				if(i<point){
@@ -70,6 +71,7 @@ package ui
 				for(i=0;i<-num;i++){
 					if(Main.mode.hp_>0){
 						Main.mode.hp_ --;
+						Main.mode.gameChk();
 						hpPic[Main.mode.hp_].visible=false;
 						Shake.add(hpMaxPic[Main.mode.hp_],800,Css.SIZE*.3);
 						O2Bar.changeO2(100);

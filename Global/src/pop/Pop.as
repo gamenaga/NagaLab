@@ -8,10 +8,7 @@
 	import audio.Music;
 	
 	import eff.E2Bomb;
-	import eff.E6Flash;
-	import eff.E6FlashBlack;
-	
-	import game.LvUp;
+	import game.ModeType;
 	import game.ModeNormal;
 	
 	import item.I10HP;
@@ -290,7 +287,7 @@
 		private function seckilling():void
 		{
 			warnTimer.reset();
-			warnTimer.delay=500;
+			warnTimer.delay = 600;
 			EventManager.AddEventFn(warnTimer,TimerEvent.TIMER_COMPLETE,seckillOver);
 			warnTimer.start();
 		}
@@ -466,13 +463,13 @@
 					if(score>0 || !missed)
 					{
 						var score2:int;
-						score2 = int(score + Math.sqrt(Main.mode.game_combo));
+						score2 = int(score + Math.sqrt(Global.m_p.getValue("combo")));
 						
 						if(state == STATE_INIT)
 						{
 							score2 *= 1.5;
 						}
-						if(Main.mode.game_type == Global.TYPE_TALENT.name)
+						if(Main.mode.game_type == ModeType.TYPE_TALENT.name)
 						{
 							score2 *= 2;
 						}
@@ -499,18 +496,19 @@
 					{
 						if(PopFactory.state != 2)
 						{
+							Global.m_p.setValue("combo", Global.m_p.getValue("combo")+1);
+							
 							if(state == STATE_INIT)
 							{
-								Main.mode.game_seckill ++;
+								Global.m_p.setValue("seckill", Global.m_p.getValue("seckill")+1);
 								Main.mode.game_seckill_combo ++;
 							}
 							else
 							{
 								Main.mode.game_seckill_combo =0;
-								Main.mode.game_combo ++;
-								if(Main.mode.game_combo > Main.mode.hi_combo)
+								if(Global.m_p.getValue("combo") > Global.m_p.getValue("hi_combo"))
 								{
-									Main.mode.hi_combo = Main.mode.game_combo;
+									Global.m_p.setValue("hi_combo", Global.m_p.getValue("combo"));
 								}
 							}
 						}
@@ -693,7 +691,7 @@
 			else
 			{
 			EventManager.AddEventFn(p,Event.ENTER_FRAME, this["move_" + path]);
-			if(bomb_chk>1 || Global.g_move_sp < Global.TYPE_NORMAL.move_sp*2.3) {
+			if(bomb_chk>1 || Global.g_move_sp < ModeType.TYPE_NORMAL.move_sp *.23) {
 //				p.addEventListener(Event.ENTER_FRAME,pudding);
 				EventManager.AddEventFn(p,Event.ENTER_FRAME,pudding,null,true);
 			}

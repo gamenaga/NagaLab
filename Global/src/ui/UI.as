@@ -26,11 +26,14 @@ package ui
 //		public static var tf_highScore:TextField = new TextField();
 		public static var hpBar:HpBar;
 		public static var o2Bar:O2Bar;
+		public static var task_bar:TaskBar;
 		public static var item_do_x:int;//生效道具位
 		public static var item_do_y:int;//生效道具位
 		
 		public static var tf_score:BitmapTextField = new BitmapTextField(Css.SIZE);
 		public static var tf_highScore:BitmapTextField = new BitmapTextField(Css.SIZE);
+		
+//		public static var 
 		
 		public function UI()
 		{
@@ -182,13 +185,15 @@ package ui
 		 * @param pointMax 起始HP上限
 		 * 
 		 */		
-		public static function gameInit(point:int,pointMax:int):void
+		public static function gameInit(point:int,pointMax:int, level:Array = null):void
 		{
 			changeScore(0);
 			ui_lv.removeChildren();
 			ui_top.visible=true;
 			initHP(point,pointMax);
 			initO2Bar();
+			inittask_bar(level);
+				
 		}
 		
 		/**
@@ -218,6 +223,28 @@ package ui
 				ui_top.addChild(o2Bar);
 			}
 			O2Bar.initO2Bar();
+		}
+		
+		public static function inittask_bar(level:Array):void
+		{
+			if(level)
+			{
+				if(task_bar == null)
+				{
+					task_bar = new TaskBar();
+//					task_bar.x = Css.SIZE*.8;
+					task_bar.y = Css.SIZE*1.2 + hpBar.height;
+					ui_top.addChild(task_bar);
+				}
+//				trace("ui 237:",ui_top.contains(task_bar),task_bar.x,task_bar.width);
+				task_bar.init(level);
+			}
+			else if(task_bar)
+			{
+				ui_top.removeChild(task_bar);
+				task_bar.dispose();
+				task_bar = null;
+			}
 		}
 	}
 }

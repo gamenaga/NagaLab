@@ -5,7 +5,6 @@ package pop
 	import flash.utils.setTimeout;
 	
 	import game.LvUp;
-	import game.Mode;
 	
 	import item.I11O2Time;
 	
@@ -50,7 +49,7 @@ package pop
 		public static var g_sp_max:int;
 		public static var g_sp_min:int;
 		public static var g_sp:int;
-		public static var g_sp_bak:int = 999;
+		public static var g_sp_bak:int = 9999;
 		public static var timer:Timer = new Timer(g_sp_max);//泡泡产出速度控制器
 		public static var spLock:int = 0;
 		public static var isPathLock:Boolean = false;
@@ -138,7 +137,7 @@ package pop
 				{
 					g_sp --;
 //					trace("popFactory 92:	"+Global.g_sp);
-					timer.delay = g_sp;
+					timer.delay = g_sp*.1;
 				}
 				
 				if(Global.g_move_sp_bak < Global.g_move_sp_max && Main.mode.game_state==Main.mode.STATE_PLAY && !I11O2Time.iDoing)
@@ -152,7 +151,7 @@ package pop
 			}
 			else if(state != 2)// && Global.g_floor.numChildren < popNumMaxItem * 1.5)
 			{
-				pause(g_sp*2);
+				pause(g_sp*.2);
 			}
 		}// end function
 		
@@ -214,11 +213,11 @@ package pop
 		 *模式创建时的 初始化 
 		 * 
 		 */		
-		public static function modeInit(sp_min:int,sp_max:int,p_type:int):void
+		public static function modeInit(sp_min:int,sp_max:int,p_type:int, item_type:int):void
 		{
-			g_sp_max = sp_max;
-			g_sp_min = sp_min;
-			g_sp = sp_max;
+			g_sp_max = sp_max *10;
+			g_sp_min = sp_min *10;
+			g_sp = sp_max *10;
 			pop_type = p_type;
 			pop_type_init = p_type;
 		}
@@ -269,7 +268,7 @@ package pop
 				{
 					g_sp = g_sp_max;
 				}
-				timer.delay = g_sp;
+				timer.delay = g_sp*.1;
 			}
 			spLock	+=	spLock;
 		}

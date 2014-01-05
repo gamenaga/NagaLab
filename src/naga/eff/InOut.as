@@ -72,12 +72,13 @@
 		 * 透明淡出
 		 * max 默认-1：表示以对象本身alpha为 淡出起始
 		 */
-		public static function fadeOut(obj:DisplayObject, scope:Number = 0.1, min:Number = 0, max:Number=1, is_pool:Boolean=false):void
+		public static function fadeOut(obj:DisplayObject, is_del:Boolean=true, scope:Number = 0.1, min:Number = 0, max:Number=1, is_pool:Boolean=false):void
 		{
 			chkEvent(obj);
 			var key:String = obj.name;
 			list[key] = {};
 			list[key].obj = obj;
+			list[key].is_del = is_del;
 			list[key].scopeOut = scope;
 			list[key].minOut = min;
 //			list[key].pool=is_pool;
@@ -134,7 +135,7 @@
             {
 //				dispose(key);
 				EventManager.delEventFn(event.target as EventDispatcher,Event.ENTER_FRAME, alphaOut);
-				if(event.target.parent != null)
+				if(list[key].is_del ==true && event.target.parent != null)
 				{
 //					event.target.parent.removeChild(event.target);
 					Vision.instance.del(event.target as Object);

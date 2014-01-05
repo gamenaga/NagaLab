@@ -16,6 +16,7 @@
 	import item.I4AddPop;
 	import item.I8Fog;
 	
+	import naga.eff.InOut;
 	import naga.eff.Vision;
 	import naga.global.Css;
 	import naga.global.Global;
@@ -26,6 +27,7 @@
 	
 	import pop.Pop;
 	import pop.PopFactory;
+	import pop.SafeTime;
 	
 	import ui.HpBar;
 	import ui.UI;
@@ -39,8 +41,9 @@
 		public var HP_max:int;
 		public var HP_max_init:int;
 		public var game_type:String;
-		public var game_silver_init:int;
-		public var game_silver:int;
+		public var relive_times:int;
+		public var relive_silver_init:int;
+		public var relive_silver:int;
 		public const STATE_TITLE:int = 1;
 		public const STATE_INIT:int = 2;
 		public const STATE_PLAY:int = 3;
@@ -49,18 +52,18 @@
 		public const STATE_END:int = 6;
 		public var ach:Object= {};
 		public var clear_quest:Boolean;//任务完成，完成任务后，进入休整
-		public const SILVER_COMBO_S:int = 800;
-		public const SILVER_TIME100_S:int = 1000;
-		public const SILVER_RELIVE:int = 1000;
+//		public const SILVER_COMBO_S:int = 800;
+//		public const SILVER_TIME100_S:int = 1000;
+//		public const SILVER_RELIVE:int = 1000;
 		protected var delay:int;
 		public var bomb_time:int;
 		public var bomb_gap:int;
-		public var game_combo:int;//连击数
+//		public var game_combo:int;//连击数
 		public var game_combo_level:int;
 		public var temp_combo_lv:int;
-		public var hi_combo:int;
+//		public var hi_combo:int;
 		public var mu_combo:int;
-		public var game_seckill:int;//秒杀数
+//		public var game_seckill:int;//秒杀数
 		public var game_seckill_combo:int;//秒杀连击数
 		
 		public function Mode(type:Object, show_score:Boolean = false)
@@ -78,21 +81,24 @@
 		public function init(type:Object):void
 		{
 			game_type = type.name;//二级类型  如 连击模式"加强版"
-			Global.g_move_sp_init=type.move_sp;
-			Global.g_move_sp_max=type.move_sp_max;
+			Global.g_move_sp_init=type.move_sp *.1;
+			Global.g_move_sp_max=type.move_sp_max *.1;
 			//			g_move_sp_init = move_sp;
-			PopFactory.modeInit(type.sp_min,type.sp_max,type.pop_type);
+			PopFactory.modeInit(type.create_delay_min, type.create_delay_max, type.pop_type, type.item_type);
 //			trace("mode 70:");
 			//			Global.show_score = show_score;
 			HP_max = HP_max_init = type.hp;
 			hp_init=type.hp;
 			hp_=type.hp;
-			game_silver = type.silver;
-			game_silver_init = type.silver;
+//						trace("mode 90:",hp_);
+			relive_times = type.relive_times
+			relive_silver = type.relive_silver;
+			relive_silver_init = type.relive_silver;
 		}
 		
 		protected function game_loop() : void
 		{
+//			trace(1);
 			switch(game_state)
 			{
 //				case STATE_TITLE:
@@ -107,7 +113,7 @@
 				}
 				case STATE_PLAY:
 				{
-					gamePlay();
+					gameChk();
 					break;
 				}
 				case STATE_STOP:
@@ -153,13 +159,15 @@
 			Global.m_p.setValue("score",0);
 			bomb_time = 1;
 			bomb_gap = 1;
-			game_combo = 0;
+			Global.m_p.setValue("combo",0);
+//			game_combo = 0;
 			mu_combo = 0;
 			game_combo_level = 0;
 			temp_combo_lv = 0;
-			hi_combo = 0;
+			Global.m_p.setValue("hi_combo",0);
 			mu_combo = 0;
-			game_seckill = 0;
+			Global.m_p.setValue("seckill",0);
+//			game_seckill = 0;
 			game_seckill_combo = 0;
 			//			UI.btnItem1.visible=false;//隐藏道具栏
 			if (g_mode != null)
@@ -197,7 +205,7 @@
 			if (!hasEventListener(Event.ENTER_FRAME))
 			{
 //				trace("mode 202:	add event");
-				EventManager.AddEventFn(this,Event.ENTER_FRAME, game_loop);
+				EventManager.AddOnceEventFn(this,Event.ENTER_FRAME, game_loop);
 			}
 			game_state = STATE_INIT;
 		}// end function
@@ -232,7 +240,7 @@
 				showAch(achText);
 				ach.h_score = 1;
 			}
-			if (ach.h_combo == 0 && DataObj.data[5] <= game_combo && DataObj.data[5] !=0)
+			if (ach.h_combo == 0 && DataObj.data[5] <= Global.m_p.getValue("combo") && DataObj.data[5] !=0)
 			{
 				if(Global.language == 1)
 				{
@@ -244,13 +252,6 @@
 				}
 				showAch(achText);
 				ach.h_combo = 1;
-			}
-			//到达一定分数，升级
-//			trace("mode  209 :10ge "+Global.m_p.getValue("score")+"  "+Shop.lv+" "+Shop.score);
-			if(Global.m_p.getValue("score") - LvUp.score >= 0){
-//				trace("mod 251:",LvUp.score);
-				LvUp.score += LvUp.SHOP_LV[Math.min(LvUp.tempLv +1, LvUp.SHOP_LV.length-1)];
-				LvUp.lvChange(1,1,true);
 			}
 			modeChkAch();
 		}
@@ -269,16 +270,16 @@
 		{
 		}// end function
 		
-		protected function gamePlay() : void
+		public function gameChk() : void
 		{
 		}// end function
 		
 		public function scores() : void
 		{
 			//保存纪录
-			if (game_combo > DataObj.data[5])
+			if (Global.m_p.getValue("combo") > DataObj.data[5])
 			{
-				DataObj.data[5]=game_combo;//更新最高连击纪录
+				DataObj.data[5]=Global.m_p.getValue("combo");//更新最高连击纪录
 			}
 			if (Global.m_p.getValue("score") > DataObj.data[1])
 			{
@@ -297,7 +298,7 @@
 		public function combo_over() : void
 		{
 			//			mu_combo = 0;
-			game_combo = 0;
+			Global.m_p.setValue("combo",0);
 			//			I1_sp_down.change_speed(Global.g_sp + (Global.g_sp_max - Global.g_sp) * 0.1);
 			chk_score();
 			
@@ -312,23 +313,23 @@
 			//			当连击等级不为5时  进行等级变化
 			//			if (game_combo_level != 5)
 			//			{
-			if (game_combo < 25)
+			if (Global.m_p.getValue("combo") < 25)
 			{
 				game_combo_level = 0;
 			}
-			else if (game_combo < 55)
+			else if (Global.m_p.getValue("combo") < 55)
 			{
 				game_combo_level = 1;
 			}
-			else if (game_combo < 95)
+			else if (Global.m_p.getValue("combo") < 95)
 			{
 				game_combo_level = 2;
 			}
-			else if (game_combo < 155)
+			else if (Global.m_p.getValue("combo") < 155)
 			{
 				game_combo_level = 3;
 			}
-			else if (game_combo < 255)
+			else if (Global.m_p.getValue("combo") < 255)
 			{
 				game_combo_level = 4;
 			}
@@ -408,18 +409,27 @@
 				//				if (game_combo != 0 && game_combo % 10 == 0)
 				var size:int;
 				size = (game_combo_level + 6) * Css.SIZE*.1 + Css.SIZE * .7;
+				var combo_num:int = Global.m_p.getValue("combo");
 				if( game_seckill_combo >=1)
 				{
-					Bubble.instance.show("<font size=\'" + size + "\' color=\'#" + Css.ORAN_S + "\'>" + game_combo + "</font><br><b>SecKill</b>", Bubble.TYPE_SCORE, pos_x, pos_y, 180,size*.8);
+					if ( combo_num >2)
+					{
+						Bubble.instance.show("<font size=\'" + size*1.2 + "\' color=\'#" + Css.YELLOW + "\'>" + combo_num + "</font><br><b>Sec<br>Kill</b>", "secKill", pos_x, pos_y, 180,size*.8 , Css.R_D);
 					}
-				else if (game_combo >2)
+					else
+					{
+						Bubble.instance.show("<b>Sec<br>Kill</b>", "secKill", pos_x, pos_y, 180,size*.8, Css.R_D);
+					}
+						
+				}
+				else if (combo_num >2)
 				{//连击数提示
 //					size = (game_combo_level + 6) * Css.SIZE*.1 + Css.SIZE * .7;
-					Bubble.instance.show("<font size=\'" + size + "\' color=\'#" + Css.ORAN_S + "\'>" + game_combo + "</font><br><b>Combo</b>", Bubble.TYPE_SCORE, pos_x, pos_y, 180,size*.6);
+					Bubble.instance.show("<font size=\'" + size + "\' color=\'#" + Css.YELLOW + "\'>" + combo_num + "</font><br><b>Combo</b>", Bubble.TYPE_SCORE, pos_x, pos_y, 180,size*.6, Css.ORAN_S);
 					//记录单局最高连击数
-					if(Main.mode.ach.g_combo<game_combo)
+					if(Main.mode.ach.g_combo < Global.m_p.getValue("combo"))
 					{
-						Main.mode.ach.g_combo = game_combo;
+						Main.mode.ach.g_combo = Global.m_p.getValue("combo");
 						//					trace("main	365	:	x:"+pos_x+"	y:"+pos_y+"	game_combo:"+game_combo);
 					}
 				}
@@ -457,6 +467,8 @@
 					}
 				}
 			}
+			
+			gameChk();
 		}// end function
 		
 		
@@ -472,10 +484,10 @@
 		protected function gameDeadChk() : void
 		{
 			game_state = STATE_OVER;
-			if(DataObj.data[2] >= game_silver)
+			if(DataObj.data[2] >= relive_silver)
 			{
 			Dialog.add("糟糕！红心\\1\\010耗尽……" +
-				"<br><br>想使用 银币\\1\\011<font size=\'-"+Css.SIZE*.1+"\' color=\'#" + Css.SILVER + "\'>" + game_silver + "</font>恢复 红心\\1\\010吗？" +
+				"<br><br>想使用 银币\\1\\011<font size=\'-"+Css.SIZE*.1+"\' color=\'#" + Css.SILVER + "\'>" + relive_silver + "</font>恢复 红心\\1\\010吗？" +
 				"<br><br>（银币\\1\\011余额<font size=\'-"+Css.SIZE*.1+"\' color=\'#" + Css.SILVER + "\'>" + DataObj.data[2] + "</font>）"
 				,null,0,null,null,0,0,0,0,0,["是",gameRelive,"否",gameOver]);
 			}
@@ -488,17 +500,19 @@
 		//游戏重生
 		protected function gameRelive() : void
 		{
+			game_state = STATE_PLAY;
 			I2Clear.go(10);
 			PopFactory.changeMoveSp(Global.g_move_sp_bak*.8);
-			game_state = STATE_PLAY;
-			DataObj.data[2] = DataObj.data[2] - game_silver;
-			Bubble.instance.show("\\2\\011<br><font size=\'+1\' color=\'#" + Css.SILVER + "\'>-" + game_silver + "</font>", Bubble.TYPE_MONEY,Global.game_view_w*.5, Global.game_view_h*.3, 100, Css.SIZE, Css.SILV_S);
+//			game_state = STATE_PLAY;
+			DataObj.data[2] = DataObj.data[2] - relive_silver;
+			Bubble.instance.show("\\2\\011<br><font size=\'+1\' color=\'#" + Css.SILVER + "\'>-" + relive_silver + "</font>", Bubble.TYPE_MONEY,Global.game_view_w*.5, Global.game_view_h*.3, 100, Css.SIZE, Css.SILV_S);
 			HpBar.changeHP(1);
 		}
 		
 		//游戏结束
 		public function gameOver() : void
 		{
+			game_state = STATE_OVER;
 //			EventManager.delEventFn(Global.ui_floor.stage,KeyboardEvent.KEY_DOWN,I11O2Time.go);
 			I8Fog.over();
 			Global.g_move_sp_bak = Global.POP_MOVE_SP_SLOW;
@@ -518,15 +532,13 @@
 				temp --;
 			}
 			
-			EventManager.delEventFn(this,Event.ENTER_FRAME, game_loop);
-			if (Global.m_p.getValue("score") > DataObj.data[1])
-			{
-				DataObj.data[1] = Global.m_p.getValue("score");
-			}
-//			UI.initO2Bar();
-			UI.ui_top.visible=false;
+//			EventManager.delEventFn(this,Event.ENTER_FRAME, game_loop);
+//			if (Global.m_p.getValue("score") > DataObj.data[1])
+//			{
+//				DataObj.data[1] = Global.m_p.getValue("score");
+//			}
+			SafeTime.isSafe = true;
 			overEff();
-			setTimeout(gameEndScore, 2500, game_type , Global.m_p.getValue("score"),"分",Score2Lv.go(Global.m_p.getValue("score"), LvScore), DataObj.data[1], ach.h_score == 1);
 			
 		}// end function
 		
@@ -536,7 +548,7 @@
 			GiftEveryHour.getSilver();
 			Global.g_time = Global.g_time + MyHeart.seconds;
 			MyHeart.stop();
-			Main.game_menu.f_upload_data(false, hi_combo);//is_new);
+			Main.game_menu.f_upload_data(false, Global.m_p.getValue("hi_combo"));//is_new);
 		}
 		
 		protected function overEff() : void
@@ -546,6 +558,7 @@
 		//游戏结算
 		protected function gameEndScore(gameType:String, score:int, u:String,lv:String, hi:int, is_new:Boolean) : void
 		{
+			InOut.fadeOut(UI.ui_top, false);
 			Bgm.end();
 			Sounds.play(Se_ending);
 			System.gc();
@@ -649,13 +662,13 @@
 			gameExit();
 		}// end function
 		
-		public function delLoop():void
-		{
-			if (hasEventListener(Event.ENTER_FRAME))
-			{
-				EventManager.delEventFn(this,Event.ENTER_FRAME, game_loop);
-			}
-		}
+//		public function delLoop():void
+//		{
+//			if (hasEventListener(Event.ENTER_FRAME))
+//			{
+//				EventManager.delEventFn(this,Event.ENTER_FRAME, game_loop);
+//			}
+//		}
 	}
 }
 

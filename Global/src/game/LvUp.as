@@ -1,8 +1,5 @@
 package game
 {
-	import flash.system.System;
-	
-	import eff.E10Fly;
 	import eff.E3FlashPoint;
 	import eff.E3FlashRound;
 	import eff.E4Ink;
@@ -44,7 +41,7 @@ package game
 		public static function lvChange(lv:int,lv2:int,is_lvUp:Boolean=false):void{
 			//			trace("lv up	41:	"+lv_+"/"+lv+"	"+lv2_+"/"+lv2+"	"+shop);
 //			trace("lvUp 44;	",Mode.game_type);
-			if(Main.mode.game_type==Global.TYPE_NORMAL.name)
+			if(Main.mode.g_mode == ModeType.MODE_LEVEL)
 			{
 				lv_=Math.max(0,lv_+lv);
 				if (lv_ > DataObj.data[8])
@@ -53,7 +50,8 @@ package game
 				}
 				tempLv=lv_;
 			}
-			else{
+			else if(Main.mode.g_mode == ModeType.MODE_FEVER)
+			{
 				lv2_=Math.max(0,lv2_+lv2);
 				if (lv2_ > DataObj.data[9])
 				{

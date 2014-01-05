@@ -94,7 +94,7 @@
 				//                        min = 0;
 				//                    }
 				//					trace("vision 60 :	"+name+	"	"+is_pool+"	alpha:"+max);
-				InOut.fadeOut(obj.obj, max * 0.1,0,max,obj.pool);
+				InOut.fadeOut(obj.obj, true, max * 0.1,0,max,obj.pool);
 			}
 			else if(obj.pool)
 			{

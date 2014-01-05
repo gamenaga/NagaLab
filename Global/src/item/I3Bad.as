@@ -38,7 +38,7 @@
 			ModeNormal.overY=parent.y;
 			Bubble.instance.show("<b>哦！天哪</b>", Bubble.TYPE_BAD, parent.x, parent.y, 180,Css.SIZE,Css.SILVER,true);
             Shake.add(Global.bg, 1500,15);
-            PopFactory.changeSpeed(PopFactory.g_sp + 100);
+            PopFactory.changeSpeed(PopFactory.g_sp + 1000);
 			PopFactory.changeMoveSp(Global.g_move_sp_bak*.9);
 			item_over();
         }// end function

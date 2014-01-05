@@ -64,7 +64,7 @@
         {
 			//			trace("item 70:		"+this.parent.parent);
 			if(parent.parent){
-				InOut.fadeOut(parent.parent, .1,0,1,true);
+				InOut.fadeOut(parent.parent, true, .1,0,1,true);
 			}
         }// end function
 		

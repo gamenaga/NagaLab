@@ -50,13 +50,6 @@ package naga.global
 		
 		//		游戏参数
 		//		public static var is_hd:Boolean;
-		public static const MODE_GUIDE:String="Guide Mode";
-		public static const MODE_NORMAL:String="Normal Mode";
-		public static const MODE_O2:String="O2 Mode";
-		public static const MODE_NORMAL100:String="100s Mode";
-		public static const TYPE_TEST:Object={name:"Test Type", pop_type:0, move_sp:1, move_sp_max:2, sp_max:488, sp_min:100, hp:3, silver:0};
-		public static var TYPE_NORMAL:Object;
-		public static var TYPE_TALENT:Object;
 		public static var g_mode:Object;
 		public static var g_move_sp_init:Number;
 		public static var g_move_sp_max:Number;

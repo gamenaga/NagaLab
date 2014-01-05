@@ -31,8 +31,8 @@ package eff
 		
 		public function renew(...paramenters):void 
 		{
-			trace("e2 34:",BC.currentFrame);
-			BC.gotoAndPlay(1);//,false);
+//			trace("e2 34:",BC.currentFrame);
+			BC.gotoAndPlay(1,false);
 //			EventManager.AddEventFn(this,Event.ENTER_FRAME,play);
 			
 			if (!_destroyed)

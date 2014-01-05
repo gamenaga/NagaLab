@@ -44,12 +44,13 @@
 		
 		//执行了几次设置属性
 		private var cout:int = 0;
-		public function setValue(varName:String,varValue:*){
+		public function setValue(varName:String,varValue:*):void
+		{
 			if(!(varValue is Number) && !(varValue is Boolean)) return;
 			var tmpObj:Object = new Object();
 			tmpObj = {value:varValue};
 			var tmpObj2:Object = new Object();
-			for (var i in varObj){
+			for (var i:* in varObj){
 				tmpObj2[i] = varObj[i];
 			}
 			tmpObj2[varName] = tmpObj.value;

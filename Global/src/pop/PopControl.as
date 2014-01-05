@@ -23,9 +23,9 @@ package pop
 		public function click_pop(event:MouseEvent) : void
 		{
 			//			testTF.text=Global.g_floor.numChildren+"	"+blue_pop+"	"+red_pop+"	"+black_pop+"\nclick!   "+event.target+"	3"+event.target.name;
-			//			trace("main 136:	"+SafeTime.isSafe);
+//						trace("main 136:	"+SafeTime.isSafe);
 //						trace("main 138:	target:"+event.currentTarget+"	"+event.target+"	target.parent:"+event.target.parent);
-			var dis:Number = NaN;//触电离泡泡圆心的距离
+			var dis:Number = 0;//触电离泡泡圆心的距离
 			if (Main.mode.game_state==Main.mode.STATE_PLAY && event.target.parent is Pop)
 			{
 				//				testTF.appendText("		good ");
@@ -87,7 +87,7 @@ package pop
 			//			trace("main 155:	囧");
 			//			Shake.add(Global.bg,500,10);
 			Sounds.play(Se_bad,0,0.3);
-			if(Main.mode.game_combo >=3)
+			if(Global.m_p.getValue("combo") >=3)
 			{
 				Bubble.instance.show("Miss", "PanMiss", Global.gameStage.mouseX, Global.gameStage.mouseY, 160, Css.SIZE*1.5, Css.SILVER);
 			}
