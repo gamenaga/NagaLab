@@ -3,10 +3,17 @@
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 	
+	import eff.E3FlashPoint;
+	
+	import item.I2Clear;
+	
 	import naga.eff.InOut;
 	import naga.eff.Shake;
+	import naga.eff.Vision;
 	import naga.eff.Zoom;
+	import naga.global.Css;
 	import naga.global.Global;
+	import naga.system.Bubble;
 	import naga.system.Sounds;
 	
 	import ui.UI;
@@ -100,9 +107,38 @@
 //			var rec:Rectangle = new Rectangle(0, 0, Global.game_view_w, Global.game_view_h);
 //			Zoom.add([Global.bg_floor , Global.g_floor, Global.eff_floor], pos_x, pos_y, rec, rec, 2000, 10);
 //			Shake.add(Global.bg, 1000);
-			setTimeout(gameEndScore, 500, game_type , Global.m_p.getValue("score"),"分",Score2Lv.go(Global.m_p.getValue("score"), LvScore), DataObj.data[1], ach.h_score == 1);
+			if(UI.task_bar.update())
+			{
+			I2Clear.go();
+			Vision.instance.add("Complete",E3FlashPoint, Global.eff_floor, Global.game_view_w*.5,Global.game_view_h*.5 ,null, .8 ,1000, 3, 0, true,true,true);
+			Bubble.instance.show("<font size=\'"+Css.SIZE*1.8+"\' color=\'#"+Css.YELL_D+"\'>Mission</font><br><font size=\'"+Css.SIZE*2+"\'>Complete</font>",Bubble.TYPE_LV_UP,Global.game_view_w*.5,Global.game_view_h*.5, 240,Css.SIZE*3,Css.YELLOW);
+			
+			}
+			else{
+			Bubble.instance.show("<font size=\'"+Css.SIZE*1.8+"\' color=\'#"+Css.BL_D+"\'>Mission</font><br><font size=\'"+Css.SIZE*2+"\'>Feiled</font>",Bubble.TYPE_LV_UP,Global.game_view_w*.5,Global.game_view_h*.5, 240,Css.SIZE*3,Css.BLUE);
+				
+			}
+			setTimeout(gameEnd, 2000, game_type , [Global.m_p.getValue("score"),"分",Score2Lv.go(Global.m_p.getValue("score"), LvScore), DataObj.data[1]], ach.h_score == 1);
 			
 		}// end function
+		
+		/**
+		 * 
+		 * @param info[0] 关卡名称
+		 * @param info[1] 关卡简介
+		 * @param info[2] 是否完成
+		 * @param info[3] 任务1得分
+		 * @param info[4] 任务1完成条件
+		 * @param info[5] 任务2得分
+		 * @param info[6] 任务2完成条件
+		 * @param info[7] 任务3得分
+		 * @param info[8] 任务3完成条件
+		 * 
+		 */		
+		override protected function gameEndScore(info:Object):void
+		{
+			
+		}
 		
 		override protected function modeChkAch() : void
 		{

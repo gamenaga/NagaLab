@@ -3,11 +3,15 @@
 	import flash.geom.Rectangle;
 	import flash.utils.setTimeout;
 	
+	import audio.Music;
+	
 	import naga.eff.InOut;
 	import naga.eff.Shake;
 	import naga.eff.Zoom;
+	import naga.global.Css;
 	import naga.global.Global;
 	import naga.system.Sounds;
+	import naga.ui.Dialog;
 	
 	import ui.UI;
 	
@@ -82,10 +86,12 @@
 			var rec:Rectangle = new Rectangle(0, 0, Global.game_view_w, Global.game_view_h);
 			Zoom.add([Global.gameStage], pos_x, pos_y, rec, rec, 2000, 10);
 			Shake.add(Global.bg, 1000);
+			Sounds.play(Se_ending);
 //			Vision.add("gameOver", E1Grow, 0, 0, null, 0.8,500,1,0,true,true,true);
-			setTimeout(gameEndScore, 2500, game_type , Global.m_p.getValue("score"),"分",Score2Lv.go(Global.m_p.getValue("score"), LvScore), DataObj.data[1], ach.h_score == 1);
+			setTimeout(gameEnd, 2500, game_type , [Global.m_p.getValue("score"),"分",Score2Lv.go(Global.m_p.getValue("score"), LvScore), DataObj.data[1]], ach.h_score == 1);
 			
 		}// end function
+		
 		
 		override protected function modeChkAch() : void
 		{
