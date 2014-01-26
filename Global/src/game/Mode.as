@@ -542,29 +542,34 @@
 			
 		}// end function
 		
-		//退回主菜单
-		public function gameExit() : void
-		{
-			GiftEveryHour.getSilver();
-			Global.g_time = Global.g_time + MyHeart.seconds;
-			MyHeart.stop();
-			Main.game_menu.f_upload_data(false, Global.m_p.getValue("hi_combo"));//is_new);
-		}
-		
 		protected function overEff() : void
 		{
 		}// end function
 		
-		//游戏结算
-		protected function gameEndScore(gameType:String, score:int, u:String,lv:String, hi:int, is_new:Boolean) : void
+		//游戏结束
+		protected function gameEnd(info:Object) : void
 		{
 			InOut.fadeOut(UI.ui_top, false);
 			Bgm.end();
-			Sounds.play(Se_ending);
 			System.gc();
 			Global.g_move_sp_bak = Global.POP_MOVE_SP_SLOW;
 			Global.g_move_sp = Global.POP_MOVE_SP_SLOW;
-			
+			gameEndScore(info);
+			gameExit();
+		}// end function
+		
+		/**
+		 * 
+		 * @param info[0] 模式标题
+		 * @param info[1] 分数
+		 * @param info[2] 单位
+		 * @param info[3] 评价等级
+		 * @param info[4] 最高分
+		 * @param info[5] 是否破纪录
+		 * 
+		 */		
+		protected function gameEndScore(info:Object):void
+		{
 			var str_tp:String = "";
 			if (Global.play_times % 3 == 0)
 			{
@@ -588,14 +593,14 @@
 			
 			
 			var npcID:int;
-//			trace("mode 345:	",score);
-			if(score<LvScore.D_)
+			//			trace("mode 345:	",score);
+			if(info[1]<LvScore.D_)
 			{npcID=3;}
-			else if(score<LvScore.C_)
+			else if(info[1]<LvScore.C_)
 			{npcID=4;}
-			else if(score<LvScore.B_)
+			else if(info[1]<LvScore.B_)
 			{npcID=5;}
-			else if(score<LvScore.S)
+			else if(info[1]<LvScore.S)
 			{npcID=6;}
 			else
 			{npcID=7;}
@@ -618,7 +623,7 @@
 			}
 			
 			var str_hi:String;
-			if (is_new)
+			if (info[5])
 			{//如果当前模式记录有更新（非全部记录）
 				if(Global.language == 1)
 				{
@@ -633,34 +638,43 @@
 			{
 				if(Global.language == 1)
 				{
-					str_hi = "<font size=\'-"+Css.SIZE*.8+"\' color=\'#" + Css.R_D + "\'>（最高纪录：<font size=\'+"+Css.SIZE*.1+"\' color=\'#" + Css.RED + "\'>" + hi + "</font>）</font>";
+					str_hi = "<font size=\'-"+Css.SIZE*.8+"\' color=\'#" + Css.R_D + "\'>（最高纪录：<font size=\'+"+Css.SIZE*.1+"\' color=\'#" + Css.RED + "\'>" + info[4] + "</font>）</font>";
 				}
 				else
 				{
-					str_hi = "<font size=\'-"+Css.SIZE*.8+"\' color=\'#" + Css.R_D + "\'>(Hi-Score: <font size=\'+"+Css.SIZE*.1+"\' color=\'#" + Css.RED + "\'>" + hi + "</font>)</font>";
+					str_hi = "<font size=\'-"+Css.SIZE*.8+"\' color=\'#" + Css.R_D + "\'>(Hi-Score: <font size=\'+"+Css.SIZE*.1+"\' color=\'#" + Css.RED + "\'>" + info[4] + "</font>)</font>";
 				}
-//				if (this.ach.h_combo == 1)
-//				{
-//					main.game_menu.f_submit();
-//				}
+				//				if (this.ach.h_combo == 1)
+				//				{
+				//					main.game_menu.f_submit();
+				//				}
 			}
 			//结算面板
 			if(Global.language == 1)
 			{
-				Main.game_menu.scores.reTxt("<b>"+gameType + "</b><br><font size=\'"+Css.SIZE*2+"\' color=\'#" + Css.YELLOW + "\'>" + score + "</font>"+u+" \<font size=\'+"+Css.SIZE+"\'>" + lv + "</font><br>" + str_hi + "<br><br>" + str_sil);
-//				Main.game_menu.createScore("<b>"+gameType + "</b><br><font size=\'"+Css.SIZE*2+"\' color=\'#" + Css.YELLOW + "\'>" + score + "</font>"+u+" \<font size=\'+"+Css.SIZE+"\'>" + lv + "</font><br>" + str_hi + "<br><br>" + str_sil);
+				Main.game_menu.scores.reTxt("<b>"+info[0] + "</b><br><font size=\'"+Css.SIZE*2+"\' color=\'#" + Css.YELLOW + "\'>" + info[1] + "</font>"+info[2]+" \<font size=\'+"+Css.SIZE+"\'>" + info[3] + "</font><br>" + str_hi + "<br><br>" + str_sil);
+				//				Main.game_menu.createScore("<b>"+gameType + "</b><br><font size=\'"+Css.SIZE*2+"\' color=\'#" + Css.YELLOW + "\'>" + score + "</font>"+u+" \<font size=\'+"+Css.SIZE+"\'>" + lv + "</font><br>" + str_hi + "<br><br>" + str_sil);
 			}
 			else
 			{
-//				Main.game_menu.scores.txt("<b>"+gameType + "</b><br><font size=\'"+Css.SIZE*2+"\' color=\'#" + Css.YELLOW + "\'>" + score + "</font>"+u+" \<font size=\'+"+Css.SIZE+"\'>" + lv + "</font><br>" + str_hi + "<br><br>" + str_sil);
+				//				Main.game_menu.scores.txt("<b>"+gameType + "</b><br><font size=\'"+Css.SIZE*2+"\' color=\'#" + Css.YELLOW + "\'>" + score + "</font>"+u+" \<font size=\'+"+Css.SIZE+"\'>" + lv + "</font><br>" + str_hi + "<br><br>" + str_sil);
 			}
 			if (Main.game_menu.menu_type != Main.game_menu.MENU_main)
 			{
 				//				trace("mode 313:	game over!");
 				Main.game_menu.show(Main.game_menu.MENU_OVER);
 			}
-			gameExit();
-		}// end function
+		}
+		
+		
+		//退回主菜单
+		public function gameExit() : void
+		{
+			GiftEveryHour.getSilver();
+			Global.g_time = Global.g_time + MyHeart.seconds;
+			MyHeart.stop();
+			Main.game_menu.f_upload_data(false, Global.m_p.getValue("hi_combo"));//is_new);
+		}
 		
 //		public function delLoop():void
 //		{
